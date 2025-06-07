@@ -3,16 +3,17 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ "tgit04" ]
+  workflow_dispatch:  # Opcional: permite disparo manual
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check if index.html exists
+      - name: Validate files
         run: |
           if [ ! -f public/index.html ]; then
-            echo "❌ Error: index.html Não encontrado!"
+            echo "::error::❌ Arquivo index.html não encontrado em public/"
             exit 1
           fi
 
@@ -27,8 +28,8 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3  # Atualizado para v3 (ação específica para Pages)
+        uses: actions/upload-pages-artifact@v2
         with:
           path: public/
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         uses: actions/deploy-pages@v2
