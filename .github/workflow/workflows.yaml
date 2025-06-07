@@ -1,0 +1,21 @@
+stages:
+  - validate
+  - deploy
+
+validate:
+  stage: validate
+  script:
+    - if [ ! -f public/index.html ]; then echo "Error: index.html não existe"; exit 1; fi
+  artifacts:
+    paths:
+      - public/
+
+pages:
+  stage: deploy
+  script:
+    - mv public public_html
+  artifacts:
+    paths:
+      - public_html
+  only:
+    - main
