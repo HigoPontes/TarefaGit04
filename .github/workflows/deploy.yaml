@@ -8,13 +8,19 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          ref: 'tgit04'  # ← Adicione esta linha para garantir o checkout da branch correta
-      - name: Validate files
+          ref: 'tgit04'  # Garante o checkout da branch correta
+
+      - name: Verify Files
         run: |
+          if [ ! -d public/ ]; then
+            echo "::error::❌ Pasta public/ não encontrada!"
+            exit 1
+          fi
           if [ ! -f public/index.html ]; then
-            echo "::error::❌ Arquivo index.html não encontrado em public/"
+            echo "::error::❌ index.html não encontrado em public/"
             exit 1
           fi
 
@@ -25,14 +31,18 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          ref: 'tgit04'  # ← Mesmo ajuste aqui
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+          ref: 'tgit04'
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v4  # Versão mais recente
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3  # Versão atualizada
         with:
-          path: public/
-      - name: Deploy
-        uses: actions/deploy-pages@v2
+          path: 'public/'
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4  # Versão mais recente
